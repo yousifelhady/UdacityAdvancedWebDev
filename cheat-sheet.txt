@@ -1,0 +1,12 @@
+*start server
+=> pg_ctl -D "path_to_postgres_data" start
+
+*Connect to database via CMD using psql
+=> psql database_name
+
+*Create database via CMD
+=> createdb database_name
+
+*Drop database via CMD
+=> dropdb database_name
+
