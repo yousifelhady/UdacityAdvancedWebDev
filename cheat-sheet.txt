@@ -10,3 +10,14 @@
 *Drop database via CMD
 => dropdb database_name
 
+*Run Flask application using CMD
+=> FLASK_APP=app.py flask run
+
+*Run Flask application with Debug mode for live reload
+=> FLASK_APP=app.py FLASK_DEBUG=true flask run
+
+*Allow Debug mode for live reload for Flask
+=> export FLASK_DEBUG=true
+
+*Configure SQLAlchemy Database URI for Flask application
+=> app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Yousif:yousif@localhost:5432/postgres'
