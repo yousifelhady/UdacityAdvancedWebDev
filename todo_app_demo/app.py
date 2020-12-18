@@ -13,11 +13,12 @@ class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
+    completed = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return f'<ID: {self.id}, TODO: {self.description}>'
 
-db.create_all() #create tables if not exist
+#db.create_all() #create tables if not exist
 
 @app.route('/todos/create', methods=['post'])
 def create_todo():
