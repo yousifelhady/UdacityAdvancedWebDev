@@ -1,6 +1,9 @@
 *start server
 => pg_ctl -D "path_to_postgres_data" start
 
+*stop server
+=> pg_ctl -D "path_to_postgres_data" stop
+
 *Connect to database via CMD using psql
 => psql database_name
 
@@ -17,7 +20,10 @@
 => FLASK_APP=app.py FLASK_DEBUG=true flask run
 
 *Allow Debug mode for live reload for Flask
-=> export FLASK_DEBUG=true
+=> set/export FLASK_DEBUG=true
 
 *Configure SQLAlchemy Database URI for Flask application
 => app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Yousif:yousif@localhost:5432/postgres'
+
+*Reset database from terminal
+=> dropdb database_name && createdb database_name
