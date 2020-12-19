@@ -41,10 +41,35 @@ def create_todo():
     else:
         return jsonify(body)
 
+@app.route('/todos/<todoId>/set-completed', methods=['post'])
+def check_todo(todoId):
+    try:
+        status = request.get_json()['completed']
+        targetedTodo = Todo.query.get(todoId)
+        targetedTodo.completed = status
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return redirect(url_for('index'))
+
+@app.route('/todos/<todoId>/delete', methods=['delete'])
+def delete_todo(todoId):
+    try:
+        todo = Todo.query.get(todoId)
+        db.session.delete(todo)
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return jsonify({ 'success': True })
+
 @app.route('/')
 def index():
     return render_template('index.html',
-    data=Todo.query.all()
+    data=Todo.query.order_by('id').all()
     )
 
 if __name__ == '__main__':

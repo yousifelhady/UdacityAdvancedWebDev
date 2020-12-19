@@ -5,6 +5,21 @@
             .hidden {
                 display: none;
             }
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                width: 200px;
+            }
+            li {
+                clear: both;
+            }
+            li button {
+                float: right;
+                cursor: pointer;
+                color: red;
+                font-size: 15px;
+            }
         </style>
     </head>
     <body>
@@ -17,11 +32,59 @@
             Something went wrong!
         </div>
         <ul id="todos">
+            <!-- jinja template -->
             {% for d in data %}
-            <li> {{ d.description }}</li>
+            <li>
+                <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}/> 
+                {{ d.description }}
+                <button class="delete-todo" data-id="{{ d.id }}">&cross;</button>
+            </li>
             {% endfor %}
         </ul>
         <script>
+            const deletedTodos = document.querySelectorAll('.delete-todo');
+            for (let i = 0; i < deletedTodos.length; i++) {
+                const deletedTodo = deletedTodos[i];
+                deletedTodo.onclick = function(e) {
+                    console.log('delete event', e);
+                    const todoId = e.target.dataset['id'];
+                    fetch(
+                        '/todos/' + todoId + '/delete',
+                        {
+                            method: 'delete'
+                        }
+                    )
+                    .then(function() {
+                        document.getElementById('error').className = 'hidden';
+                    })
+                    .catch(function() {
+                        document.getElementById('error').className = '';
+                    })
+                }
+            }
+            const checkboxes = document.querySelectorAll('.check-completed');
+            for (let i = 0; i < checkboxes.length; i++) {
+                const checkbox = checkboxes[i];
+                checkbox.onchange = function(e) {
+                    console.log('check event', e);
+                    const status = e.target.checked;
+                    const todoId = e.target.dataset['id'];
+                    fetch(
+                        '/todos/' + todoId +'/set-completed',
+                        {
+                            method: 'post',
+                            body: JSON.stringify({'completed': status}),
+                            headers: {'Content-Type': 'application/json'}
+                        }
+                    )
+                    .then(function() {
+                        document.getElementById('error').className = 'hidden';
+                    })
+                    .catch(function() {
+                        document.getElementById('error').className = '';
+                    })
+                }
+            }
             document.getElementById('form').onsubmit = function(e) {
                 e.preventDefault();
                 fetch(
