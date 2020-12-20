@@ -9,7 +9,7 @@
                 list-style: none;
                 margin: 0;
                 padding: 0;
-                width: 200px;
+                width: 300px;
             }
             li {
                 clear: both;
@@ -20,27 +20,43 @@
                 color: red;
                 font-size: 15px;
             }
+            .lists-wrapper, .todos-wrapper {
+                display: inline-block;
+                vertical-align: top;
+            }
         </style>
     </head>
     <body>
-        <form id="form">
-            <label>Create To-Do</label><br>
-            <input type="text" id="description" name="description" />
-            <input type="submit" value="Create" />
-        </form>
-        <div id="error" class="hidden">
-            Something went wrong!
+        <div class="lists-wrapper">
+            <ul id="lists">
+                {% for list in lists %}
+                <li>
+                    <a href="/lists/{{list.id}}">{{ list.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-        <ul id="todos">
-            <!-- jinja template -->
-            {% for d in data %}
-            <li>
-                <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}/> 
-                {{ d.description }}
-                <button class="delete-todo" data-id="{{ d.id }}">&cross;</button>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="todos-wrapper">
+            <h3>{{ active_list.name }}</h3>
+            <form id="form">
+                <label>Create To-Do</label><br>
+                <input type="text" id="description" name="description" />
+                <input type="submit" value="Create" />
+            </form>
+            <div id="error" class="hidden">
+                Something went wrong!
+            </div>
+            <ul id="todos">
+                <!-- jinja template -->
+                {% for todo in todos %}
+                <li>
+                    <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" {% if todo.completed %} checked {% endif %}/> 
+                    {{ todo.description }}
+                    <button class="delete-todo" data-id="{{ todo.id }}">&cross;</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         <script>
             const deletedTodos = document.querySelectorAll('.delete-todo');
             for (let i = 0; i < deletedTodos.length; i++) {
