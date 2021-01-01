@@ -36,3 +36,7 @@
 
 *@app.route() by default responds to 'GET' methods
 
+*CORS = Cross Origin Resource Sharing
+
+*
+
