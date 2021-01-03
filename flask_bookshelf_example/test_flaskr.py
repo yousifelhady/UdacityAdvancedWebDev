@@ -95,6 +95,28 @@ class BookShelfTestCase(unittest.TestCase):
     def test_assert_None(self):
         self.assertFalse(None)
 
+    #TDD section
+
+    def test_search_book(self):
+        search_term = 'The'
+        res = self.client().get('/books', query_string={'search': search_term})
+        res_data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res_data['success'], True)
+        self.assertTrue(res_data['books'])
+        self.assertEqual(res_data['total_books'], 3)
+
+    def test_search_book_no_match(self):
+        search_term = 'nomatch'
+        res = self.client().get('/books', query_string={'search': search_term})
+        res_data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res_data['success'], True)
+        self.assertEqual(res_data['books'], [])
+        self.assertEqual(res_data['total_books'], 0)
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()

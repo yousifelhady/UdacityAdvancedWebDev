@@ -41,17 +41,27 @@ def create_app(test_config=None):
     #by default, it listens to GET request
     @app.route('/books')
     def get_books():
-        all_books = Book.query.order_by(Book.id).all()
-        paginated_books = paginate_books(request, all_books)
-
-        if len(paginated_books) == 0:
-            abort(404)
-        else:
+        search_term = request.args.get('search')
+        if search_term is not None:
+            matched_books = Book.query.order_by(Book.id).filter(Book.title.ilike('%{}%'.format(search_term)))
+            paginated_books = paginate_books(request, matched_books)
             return jsonify({
                 'success': True,
                 'books': paginated_books,
-                'total_books': len(all_books)
+                'total_books': len(paginated_books)
             })
+        else:
+            all_books = Book.query.order_by(Book.id).all()
+            paginated_books = paginate_books(request, all_books)
+
+            if len(paginated_books) == 0:
+                abort(404)
+            else:
+                return jsonify({
+                    'success': True,
+                    'books': paginated_books,
+                    'total_books': len(all_books)
+                })
 
     # @TODO: Write a route that will update a single book's rating.
     #         It should only be able to update the rating, not the entire representation
