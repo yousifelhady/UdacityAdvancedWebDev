@@ -153,7 +153,7 @@ def create_app(test_config=None):
     def bad_request(error):
         return jsonify({
             'success': False,
-            'error': 404,
+            'error': 400,
             'message': "Bad Request"
         }), 400
 
