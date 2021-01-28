@@ -38,5 +38,6 @@
 
 *CORS = Cross Origin Resource Sharing
 
-*
+*Import Postgres database file
+=> psql database_name < database_file.psql
 
