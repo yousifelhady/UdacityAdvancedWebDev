@@ -1,4 +1,5 @@
 from flask import Flask, request, abort
+from functools import wraps
 
 def get_token_from_auth_header():
     #make sure that the request has Authorization key and is authorized
@@ -18,10 +19,17 @@ def get_token_from_auth_header():
 
     return auth_parts[1]
 
+def requires_auth(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        jwt = get_token_from_auth_header()
+        return f(jwt, *args, **kwargs)
+    return wrapper
+
 app = Flask(__name__)
 
 @app.route('/headers')
-def headers():
-    jwt = get_token_from_auth_header()
+@requires_auth
+def headers(jwt):
     print(jwt)
     return 'not implemented'
